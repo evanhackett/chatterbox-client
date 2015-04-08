@@ -85,3 +85,6 @@ form input[type=text] {
 .username {
     color: blue;
 }
+.friend {
+    font-weight: bold;
+}
