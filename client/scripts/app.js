@@ -7,7 +7,6 @@ var app ={
   friendList: {},
 
   init: function() {
-
     app.fetch();
     setInterval(app.fetch, 2000);
     
@@ -59,15 +58,18 @@ var app ={
 
   addMessage: function(message) {
     var selectedRoom = $("#roomSelect option:selected").val();
+    if (!selectedRoom) {
+      selectedRoom = 'lobby';
+    }
 
     if (selectedRoom === message.roomname) {
       if (app.friendList[message.username]) {
-        $('#chats').append('<p class="friend"> <span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p>');
+        $('#chats').append('<div class="chat"><p class="friend"> <span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p></div>');
         $('.username').click( function(value) {
           app.addFriend(value.target);
         });
       } else {
-        $('#chats').append('<p>' + '<span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p>');
+        $('#chats').append('<div class="chat"><p>' + '<span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p></div>');
         $('.username').click( function(value) {
           app.addFriend(value.target);
         });
@@ -90,8 +92,8 @@ var app ={
     app.friendList[username] = true;
   },
 
-  handleSubmit: function(event) {
-    event.preventDefault();
+  handleSubmit: function(e) {
+    e.preventDefault();
 
     username = $('.username').text;
     message = _.escape($('.message').text);
@@ -126,12 +128,8 @@ $( document ).ready(function() {
     var whoami = getUrlParameter('username');
     $('.username').text(whoami);
     
-    $('.username').click( function (value) {
 
-        app.addFriend(value.target);
-    });
-
-    $('.submit').click( function () {
-        app.handleSubmit();
+    $('.submit').click( function(event) {
+        app.handleSubmit(event);
     });
 });
