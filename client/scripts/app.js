@@ -1,5 +1,3 @@
-// YOUR CODE HERE:
-
 
 var app ={
   server: 'https://api.parse.com/1/classes/chatterbox',
@@ -7,9 +5,10 @@ var app ={
   friendList: {},
 
   init: function() {
+    $('#send').submit(app.handleSubmit);
+    app.username = getUrlParameter('username');
     app.fetch();
     setInterval(app.fetch, 2000);
-    
   },
 
   send: function(message) {
@@ -121,13 +120,5 @@ function getUrlParameter(sParam) {
 }  
 
 $( document ).ready(function() {
-
     app.init();
-
-    app.username = getUrlParameter('username');
-    
-
-    $('.submit').click( function(event) {
-        app.handleSubmit(event);
-    });
 });
