@@ -14,8 +14,7 @@ var app ={
 
   send: function(message) {
     $.ajax({
-    // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: app.server,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
@@ -95,14 +94,14 @@ var app ={
   handleSubmit: function(e) {
     e.preventDefault();
 
-    username = $('.username').text;
-    message = _.escape($('.message').text);
-    room = $('.room').text;
+    username = _.escape(app.username);
+    message = _.escape($('#message').val());
+    room = _.escape($('#roomSelect').val());
 
     var messageObj = {
       username: username,
-      message: message,
-      room: room
+      text: message,
+      roomname: room
     };
 
     app.send(messageObj);
@@ -125,8 +124,7 @@ $( document ).ready(function() {
 
     app.init();
 
-    var whoami = getUrlParameter('username');
-    $('.username').text(whoami);
+    app.username = getUrlParameter('username');
     
 
     $('.submit').click( function(event) {
