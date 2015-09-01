@@ -5,8 +5,10 @@ var app ={
   friendList: {},
 
   init: function() {
-    $('#send').submit(app.handleSubmit);
     app.username = getUrlParameter('username');
+    $('#send').submit(app.handleSubmit);
+    $('#main').on('click', '.username', app.addFriend);
+    
     app.fetch();
     setInterval(app.fetch, 2000);
   },
@@ -21,7 +23,6 @@ var app ={
       console.log('chatterbox: Message sent');
     },
     error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message');
     }
   });
@@ -29,8 +30,7 @@ var app ={
 
   fetch: function() {
     $.ajax({
-    // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: app.server,
     type: 'GET',
     data: {order: '-createdAt'},
     contentType: 'application/json',
@@ -44,7 +44,6 @@ var app ={
     },
 
     error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message');
     }
     });
@@ -61,17 +60,22 @@ var app ={
     }
 
     if (selectedRoom === message.roomname) {
+
+
+      var $chat = $('<div class="chat"/>');
+      var $username = $('<span class="username"/>');
+      // append to the chat variable
+      $username.text(message.username+': ').attr('data-username', message.username).attr('data-roomname',message.roomname).appendTo($chat);
+
       if (app.friendList[message.username]) {
-        $('#chats').append('<div class="chat"><p class="friend"> <span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p></div>');
-        $('.username').click( function(value) {
-          app.addFriend(value.target);
-        });
-      } else {
-        $('#chats').append('<div class="chat"><p>' + '<span class="username" data-username>' + _.escape(message.username) + '</span> : ' + _.escape(message.text) + ' ' + '<span class="roomname" data-roomname>' + _.escape(message.roomname) + '</span></p></div>');
-        $('.username').click( function(value) {
-          app.addFriend(value.target);
-        });
+         $username.addClass('friend');
       }
+
+      var $message = $('<br><span/>');
+      $message.text(message.text).appendTo($chat);
+
+      // Add the message to the UI
+      $('#chats').append($chat);
     }
     app.addRoom(message.roomname);
   },
@@ -86,8 +90,15 @@ var app ={
   },
 
   addFriend: function(evt) {
-    var username = $(evt).text();
+
+    var username = $(evt.currentTarget).text();
+    // strip off the colon and space chars
+    username = username.substring(0, username.length-2);
     app.friendList[username] = true;
+
+    // Escape the username in case it contains a quote
+    var selector = '[data-username="'+username.replace(/"/g, '\\\"')+'"]';
+    var $usernames = $(selector).addClass('friend');
   },
 
   handleSubmit: function(e) {
