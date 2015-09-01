@@ -9,6 +9,7 @@ var app ={
     $('#myUsername').text(app.username);
     $('#send').submit(app.handleSubmit);
     $('#main').on('click', '.username', app.addFriend);
+    $('#addRoom').click(app.createRoom);
     
     app.fetch();
     setInterval(app.fetch, 2000);
@@ -81,13 +82,22 @@ var app ={
     app.addRoom(message.roomname);
   },
 
+  // called when a new room needs to be added to the drop down
   addRoom: function(room) {
     if (room !== undefined && room !== '') {
       if (app.roomList[room] === undefined) {
-        $('#roomSelect').append('<option value="' + room + '">' + room + '</option>');
+        var $roomToAppend = $('<option/>').val(room).text(room);
+        $('#roomSelect').append($roomToAppend);
         app.roomList[room] = true;
       }
     }
+  },
+
+  // called when user clicks on the add room button
+  createRoom: function(evt) {
+    var roomname = _.escape($("#newRoom").val());
+    app.addRoom(roomname);
+    $('#roomSelect').val(roomname);
   },
 
   addFriend: function(evt) {
