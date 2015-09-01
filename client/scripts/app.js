@@ -44,7 +44,7 @@ var app ={
     },
 
     error: function (data) {
-      console.error('chatterbox: Failed to send message');
+      console.error('chatterbox: Failed to fetch message');
     }
     });
   },

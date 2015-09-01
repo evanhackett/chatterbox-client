@@ -87,9 +87,10 @@ describe('chatterbox', function() {
       });
 
       it('should be able to add rooms to the DOM', function(){
+        var initialNumberOfRooms = $('#roomSelect').children().length;
         app.addRoom('superLobby');
 
-        expect($('#roomSelect').children().length).to.equal(1);
+        expect($('#roomSelect').children().length).to.equal(initialNumberOfRooms + 1);
       });
 
     });
