@@ -6,6 +6,7 @@ var app ={
 
   init: function() {
     app.username = getUrlParameter('username');
+    $('#myUsername').text(app.username);
     $('#send').submit(app.handleSubmit);
     $('#main').on('click', '.username', app.addFriend);
     
