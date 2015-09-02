@@ -16,6 +16,9 @@ var app ={
   },
 
   send: function(message) {
+    app.startSpinner();
+    $('#message').val('');
+
     $.ajax({
     url: app.server,
     type: 'POST',
@@ -43,6 +46,7 @@ var app ={
         app.addMessage(value);
       });
 
+      app.stopSpinner();
     },
 
     error: function (data) {
@@ -98,6 +102,7 @@ var app ={
     var roomname = _.escape($("#newRoom").val());
     app.addRoom(roomname);
     $('#roomSelect').val(roomname);
+    $("#newRoom").val('');
   },
 
   addFriend: function(evt) {
@@ -126,8 +131,15 @@ var app ={
     };
 
     app.send(messageObj);
-  }
+  },
   
+  startSpinner: function() {
+    $('.spinner img').show();
+  },
+
+  stopSpinner: function() {
+    $('.spinner img').hide();
+  }
 };
 
 function getUrlParameter(sParam) {
